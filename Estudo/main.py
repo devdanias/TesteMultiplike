@@ -14,11 +14,11 @@ senha = os.getenv("SENHA")
 
 tokens_validos = {}
 
-app.route("/login", methods=["POST"])
+@app.route("/login", methods=['POST'])
 def login():
     credenciais = request.get_json()
     if  not credenciais or 'usuario' not in credenciais or 'senha' not in credenciais:
-        return jsonify({"erro": "Usuário e senha são obrigatóris"}), 400
+        return jsonify({"erro": "Usuário e senha são obrigatórios"}), 400
     
     if credenciais['usuario'] == usuario and credenciais['senha'] == senha:
         token = str(uuid.uuid4())
@@ -32,13 +32,13 @@ def autenticar():
         return False
     return True
 
-@app.route("/data", methods=["GET"])
+@app.route("/data", methods=['GET'])
 def get_data():
     if not autenticar():
         return jsonify({"erro": "Acesso negado. Token inválido ou ausente"}),401
     return jsonify(dados)
 
-@app.route("/data", methods=["POST"])
+@app.route("/data", methods=['POST'])
 def add_data():
     if not autenticar():
         return jsonify({"erro": "Acesso negado. Token inválido ou ausente"}),401
@@ -54,7 +54,7 @@ def add_data():
 
     return jsonify(novo_item), 201 
 
-@app.route("/data/<int:id>", methods=["DELETE"])
+@app.route("/data/<int:id>", methods=['DELETE'])
 def delete_data(id):
     if not autenticar():
         return jsonify({"erro": "Acesso negado. Token inválido ou ausente"}),401
@@ -64,7 +64,6 @@ def delete_data(id):
             dados.remove(item)
         return jsonify ({"mensagem": "Item removido com sucesso"})
     return jsonify ({"erro": "Item não encontrado"}), 404
-
 
 if __name__ == '__main__':
     app.run(debug=True) 
